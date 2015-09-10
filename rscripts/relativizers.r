@@ -70,7 +70,7 @@ ggplot(t,aes(x=Relativizer,y=Proportion)) +
   facet_wrap(~RCType) +
   geom_text(aes(label=Frequency,y=Proportion+.1))
 ggsave("graphs/relativizer_distribution_byrctype.pdf")
-ggsave("graphs/relativizer_distribution_byrctype.jpg")
+ggsave("graphs/relativizer_distribution_byrctype.jpg",width=7)
 
 # PLOT BY SEX
 # there seem to be no sex differences
@@ -87,7 +87,7 @@ ggplot(t,aes(x=Relativizer,y=Proportion)) +
   facet_grid(RCType~Sex) +
   geom_text(aes(label=Frequency,y=Proportion+.1))
 ggsave("graphs/relativizer_distribution_byrctype_bysex.pdf")
-ggsave("graphs/relativizer_distribution_byrctype_bysex.jpg")
+ggsave("graphs/relativizer_distribution_byrctype_bysex.jpg",width=7)
 
 # PLOT BY DIALECT
 # the only dialect that seems to go against the trend is New England
@@ -105,7 +105,7 @@ ggplot(t,aes(x=Relativizer,y=Proportion)) +
   facet_grid(RCType~Dialect) +
   geom_text(aes(label=Frequency,y=Proportion+.1))
 ggsave("graphs/relativizer_distribution_byrctype_bydialect.pdf",width=19)
-ggsave("graphs/relativizer_distribution_byrctype_bydialect.jpg",width=19)
+ggsave("graphs/relativizer_distribution_byrctype_bydialect.jpg",width=15)
 
 # PLOT BY AGE
 # there may be a higher incidence of "that"s  in the oldest age group for both sbj and non-sbj RCs -- will be interesting to see if this comes out in the analysis or is just an artefact of one or two idiosyncratic old speakers
@@ -124,7 +124,7 @@ ggplot(t,aes(x=Relativizer,y=Proportion)) +
   facet_grid(RCType~Age) +
   geom_text(aes(label=Frequency,y=Proportion+.1))
 ggsave("graphs/relativizer_distribution_byrctype_byage.pdf",width=15)
-ggsave("graphs/relativizer_distribution_byrctype_byage.jpg",width=15)
+ggsave("graphs/relativizer_distribution_byrctype_byage.jpg",width=12)
 
 # PLOT BY EDUCATION
 # for non-sbj RCs, there seem to be more nulls / fewer "that"s with increasing education level
@@ -143,7 +143,7 @@ ggplot(t,aes(x=Relativizer,y=Proportion)) +
   facet_grid(RCType~Education) +
   geom_text(aes(label=Frequency,y=Proportion+.1))
 ggsave("graphs/relativizer_distribution_byrctype_byeducation.pdf",width=15)
-ggsave("graphs/relativizer_distribution_byrctype_byeducation.jpg",width=15)
+ggsave("graphs/relativizer_distribution_byrctype_byeducation.jpg",width=12)
 
 # PLOT BY ANTECEDENT TYPE
 # antecedent seems to matter quite a bit for non-subject RCs, but not for subject RCs
@@ -162,7 +162,7 @@ ggplot(t,aes(x=Relativizer,y=Proportion)) +
   facet_grid(RCType~Antecedent) +
   geom_text(aes(label=Frequency,y=Proportion+.1))
 ggsave("graphs/relativizer_distribution_byrctype_byantecedent.pdf",width=15)
-ggsave("graphs/relativizer_distribution_byrctype_byantecedent.jpg",width=11)
+ggsave("graphs/relativizer_distribution_byrctype_byantecedent.jpg",width=9)
 
 # PLOT BY MATRIX CLAUSE TYPE
 # matrix clause type seems to matter
@@ -181,7 +181,7 @@ ggplot(t,aes(x=Relativizer,y=Proportion)) +
   facet_grid(RCType~MatrixClause) +
   geom_text(aes(label=Frequency,y=Proportion+.1))
 ggsave("graphs/relativizer_distribution_byrctype_bymatrixclause.pdf",width=15)
-ggsave("graphs/relativizer_distribution_byrctype_bymatrixclause.jpg",width=15)
+ggsave("graphs/relativizer_distribution_byrctype_bymatrixclause.jpg",width=12)
 
 # PLOT BY HEAD SPECIFICITY
 # head specificity seems to matter: for non-subject RCs, more null than "that"s for empty heads; reverse for nonempty heads.
@@ -236,7 +236,7 @@ ggplot(t,aes(x=Relativizer,y=Proportion)) +
   facet_grid(RCType~RClength) +
   geom_text(aes(label=Frequency,y=Proportion+.1))
 ggsave("graphs/relativizer_distribution_byrctype_byrclength.pdf",width=16)
-ggsave("graphs/relativizer_distribution_byrctype_byrclength.jpg",width=16)
+ggsave("graphs/relativizer_distribution_byrctype_byrclength.jpg",width=13)
 
 
 
