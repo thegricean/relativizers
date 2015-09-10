@@ -8,7 +8,7 @@
 *.log
 *.synctex.gz
 *.tmp.results
-*.results.csv
+*.results.txt
 *-subject_information.csv
 *-mturk.csv
 *-system.csv
