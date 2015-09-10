@@ -43,6 +43,10 @@ d$BinnedAge = cut(d$Speaker_Age,breaks=5)
 d[d$Type.of.Antecedent == "superlative",]$Type.of.Antecedent = "unique"
 d[d$Type.of.Antecedent == "indefinte",]$Type.of.Antecedent = "indefinite"
 d[d$Matrix.Clause.Type == "loneNP",]$Matrix.Clause.Type = "lonehead"
+d$OriginalRelativizer = d$Relativizer
+d$Relativizer = as.character(d$OriginalRelativizer)
+d[d$Relativizer %in% c("who","which"),]$Relativizer = "wh"
+d$Relativizer = as.factor(d$Relativizer)
 d = droplevels(d)
 summary(d)
 
