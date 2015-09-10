@@ -40,6 +40,10 @@ d$Adjacency = as.numeric(as.character(d$Adjacency))
 d$BinnedAdjacency = cut(d$Adjacency,breaks=c(-0.1,0,1,2,4,19))
 d$BinnedRClength = cut(as.numeric(as.character(d$RClength)),breaks=c(-0.1,2,3,4,5,7,10,20,65))
 d$BinnedAge = cut(d$Speaker_Age,breaks=5)
+d[d$Type.of.Antecedent == "superlative",]$Type.of.Antecedent = "unique"
+d[d$Type.of.Antecedent == "indefinte",]$Type.of.Antecedent = "indefinite"
+d[d$Matrix.Clause.Type == "loneNP",]$Matrix.Clause.Type = "lonehead"
+d = droplevels(d)
 summary(d)
 
 save(d, file="data/d.RData")
@@ -142,6 +146,7 @@ ggsave("graphs/relativizer_distribution_byrctype_byeducation.jpg",width=15)
 t = as.data.frame(prop.table(table(d$Relativizer,d$Type.of.Antecedent,d$RCType),mar=c(2,3)))
 t
 colnames(t)=c("Relativizer","Type.of.Antecedent","RCType","Proportion")
+t$Antecedent = factor(x=as.character(t$Type.of.Antecedent),levels=c("indefinite","definite","pronoun","unique"))
 f = as.data.frame(table(d$Relativizer, d$Type.of.Antecedent,d$RCType))
 row.names(f) = paste(f$Var1,f$Var2,f$Var3)
 t$Frequency = f[paste(t$Relativizer,t$Type.of.Antecedent,t$RCType),]$Freq
@@ -150,10 +155,10 @@ t = na.omit(t)
 
 ggplot(t,aes(x=Relativizer,y=Proportion)) +
   geom_bar(stat="identity") +
-  facet_grid(RCType~Type.of.Antecedent) +
+  facet_grid(RCType~Antecedent) +
   geom_text(aes(label=Frequency,y=Proportion+.1))
 ggsave("graphs/relativizer_distribution_byrctype_byantecedent.pdf",width=15)
-ggsave("graphs/relativizer_distribution_byrctype_byantecedent.jpg",width=15)
+ggsave("graphs/relativizer_distribution_byrctype_byantecedent.jpg",width=11)
 
 # PLOT BY MATRIX CLAUSE TYPE
 # matrix clause type seems to matter
@@ -164,14 +169,15 @@ f = as.data.frame(table(d$Relativizer, d$Matrix.Clause.Type,d$RCType))
 row.names(f) = paste(f$Var1,f$Var2,f$Var3)
 t$Frequency = f[paste(t$Relativizer,t$Matrix.Clause.Type,t$RCType),]$Freq
 head(t)
+t$MatrixClause = factor(x=as.character(t$Matrix.Clause.Type),levels=c("cleft","possessive","existential","other","lonehead","copula"))
 t = na.omit(t)
 
 ggplot(t,aes(x=Relativizer,y=Proportion)) +
   geom_bar(stat="identity") +
-  facet_grid(RCType~Matrix.Clause.Type) +
+  facet_grid(RCType~MatrixClause) +
   geom_text(aes(label=Frequency,y=Proportion+.1))
-ggsave("graphs/relativizer_distribution_byrctype_bymatrixclause.pdf",width=18)
-ggsave("graphs/relativizer_distribution_byrctype_bymatrixclause.jpg",width=18)
+ggsave("graphs/relativizer_distribution_byrctype_bymatrixclause.pdf",width=15)
+ggsave("graphs/relativizer_distribution_byrctype_bymatrixclause.jpg",width=15)
 
 # PLOT BY HEAD SPECIFICITY
 # head specificity seems to matter: for non-subject RCs, more null than "that"s for empty heads; reverse for nonempty heads.
