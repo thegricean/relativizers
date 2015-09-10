@@ -1,8 +1,9 @@
+# created by jdegen on 09/09/2015
 theme_set(theme_bw(18))
 setwd("~/cogsci/projects/stanford/projects/relativizers/")
 source("rscripts/helpers.r")
 
-load("data/r.RData")
+load("data/d.RData")
 
 d_subj = read.table(file="data/rc_subject.results.txt",sep="\t", header=T, quote="")
 nrow(d_subj)
@@ -30,9 +31,24 @@ d$Speaker_sex=gsub("\"","",d$Speaker_sex)
 d$Speaker_sex=as.factor(as.character(gsub(" ","",d$Speaker_sex)))
 d$Speaker_dialect=gsub("\"","",d$Speaker_dialect)
 d$Speaker_dialect=as.factor(as.character(gsub(" ","",d$Speaker_dialect)))
-
+d$Matrix.Clause.Type=gsub("\"","",d$Matrix.Clause.Type)
+d$Matrix.Clause.Type=as.factor(as.character(gsub(" ","",d$Matrix.Clause.Type)))
+d$Adjacency=gsub("\"","",d$Adjacency)
+d$Adjacency=as.character(gsub(" ","",d$Adjacency))
+d[grep("adj",d$Adjacency),]$Adjacency = 0
+d$Adjacency = as.numeric(as.character(d$Adjacency))
+d$BinnedAdjacency = cut(d$Adjacency,breaks=c(-0.1,0,1,2,4,19))
+d$BinnedRClength = cut(as.numeric(as.character(d$RClength)),breaks=c(-0.1,2,3,4,5,7,10,20,65))
+d$BinnedAge = cut(d$Speaker_Age,breaks=5)
 summary(d)
 
+save(d, file="data/d.RData")
+
+######################################################
+################### PLOTS ############################
+######################################################
+
+# PLOT OF RELATIVIZER DISTRIBUTION BY RC TYPE
 t = as.data.frame(prop.table(table(d$Relativizer,d$RCType),mar=c(2)))
 t
 colnames(t)=c("Relativizer","RCType","Proportion")
@@ -46,8 +62,10 @@ ggplot(t,aes(x=Relativizer,y=Proportion)) +
   facet_wrap(~RCType) +
   geom_text(aes(label=Frequency,y=Proportion+.1))
 ggsave("graphs/relativizer_distribution_byrctype.pdf")
+ggsave("graphs/relativizer_distribution_byrctype.jpg")
 
 # PLOT BY SEX
+# there seem to be no sex differences
 t = as.data.frame(prop.table(table(d$Relativizer,d$Speaker_sex,d$RCType),mar=c(2,3)))
 t
 colnames(t)=c("Relativizer","Sex","RCType","Proportion")
@@ -61,8 +79,10 @@ ggplot(t,aes(x=Relativizer,y=Proportion)) +
   facet_grid(RCType~Sex) +
   geom_text(aes(label=Frequency,y=Proportion+.1))
 ggsave("graphs/relativizer_distribution_byrctype_bysex.pdf")
+ggsave("graphs/relativizer_distribution_byrctype_bysex.jpg")
 
 # PLOT BY DIALECT
+# the only dialect that seems to go against the trend is New England
 t = as.data.frame(prop.table(table(d$Relativizer,d$Speaker_dialect,d$RCType),mar=c(2,3)))
 t
 colnames(t)=c("Relativizer","Dialect","RCType","Proportion")
@@ -77,9 +97,11 @@ ggplot(t,aes(x=Relativizer,y=Proportion)) +
   facet_grid(RCType~Dialect) +
   geom_text(aes(label=Frequency,y=Proportion+.1))
 ggsave("graphs/relativizer_distribution_byrctype_bydialect.pdf",width=19)
+ggsave("graphs/relativizer_distribution_byrctype_bydialect.jpg",width=19)
 
 # PLOT BY AGE
-d$BinnedAge = cut(d$Speaker_Age,breaks=5)
+# there may be a higher incidence of "that"s  in the oldest age group for both sbj and non-sbj RCs -- will be interesting to see if this comes out in the analysis or is just an artefact of one or two idiosyncratic old speakers
+
 t = as.data.frame(prop.table(table(d$Relativizer,d$BinnedAge,d$RCType),mar=c(2,3)))
 t
 colnames(t)=c("Relativizer","Age","RCType","Proportion")
@@ -94,8 +116,11 @@ ggplot(t,aes(x=Relativizer,y=Proportion)) +
   facet_grid(RCType~Age) +
   geom_text(aes(label=Frequency,y=Proportion+.1))
 ggsave("graphs/relativizer_distribution_byrctype_byage.pdf",width=15)
+ggsave("graphs/relativizer_distribution_byrctype_byage.jpg",width=15)
 
 # PLOT BY EDUCATION
+# for non-sbj RCs, there seem to be more nulls / fewer "that"s with increasing education level
+# for sbj RCs, it's harder to see a clear pattern
 t = as.data.frame(prop.table(table(d$Relativizer,d$Speaker_education,d$RCType),mar=c(2,3)))
 t
 colnames(t)=c("Relativizer","Education","RCType","Proportion")
@@ -110,6 +135,100 @@ ggplot(t,aes(x=Relativizer,y=Proportion)) +
   facet_grid(RCType~Education) +
   geom_text(aes(label=Frequency,y=Proportion+.1))
 ggsave("graphs/relativizer_distribution_byrctype_byeducation.pdf",width=15)
+ggsave("graphs/relativizer_distribution_byrctype_byeducation.jpg",width=15)
+
+# PLOT BY ANTECEDENT TYPE
+# antecedent seems to matter quite a bit for non-subject RCs, but not for subject RCs
+t = as.data.frame(prop.table(table(d$Relativizer,d$Type.of.Antecedent,d$RCType),mar=c(2,3)))
+t
+colnames(t)=c("Relativizer","Type.of.Antecedent","RCType","Proportion")
+f = as.data.frame(table(d$Relativizer, d$Type.of.Antecedent,d$RCType))
+row.names(f) = paste(f$Var1,f$Var2,f$Var3)
+t$Frequency = f[paste(t$Relativizer,t$Type.of.Antecedent,t$RCType),]$Freq
+head(t)
+t = na.omit(t)
+
+ggplot(t,aes(x=Relativizer,y=Proportion)) +
+  geom_bar(stat="identity") +
+  facet_grid(RCType~Type.of.Antecedent) +
+  geom_text(aes(label=Frequency,y=Proportion+.1))
+ggsave("graphs/relativizer_distribution_byrctype_byantecedent.pdf",width=15)
+ggsave("graphs/relativizer_distribution_byrctype_byantecedent.jpg",width=15)
+
+# PLOT BY MATRIX CLAUSE TYPE
+# matrix clause type seems to matter
+t = as.data.frame(prop.table(table(d$Relativizer,d$Matrix.Clause.Type,d$RCType),mar=c(2,3)))
+t
+colnames(t)=c("Relativizer","Matrix.Clause.Type","RCType","Proportion")
+f = as.data.frame(table(d$Relativizer, d$Matrix.Clause.Type,d$RCType))
+row.names(f) = paste(f$Var1,f$Var2,f$Var3)
+t$Frequency = f[paste(t$Relativizer,t$Matrix.Clause.Type,t$RCType),]$Freq
+head(t)
+t = na.omit(t)
+
+ggplot(t,aes(x=Relativizer,y=Proportion)) +
+  geom_bar(stat="identity") +
+  facet_grid(RCType~Matrix.Clause.Type) +
+  geom_text(aes(label=Frequency,y=Proportion+.1))
+ggsave("graphs/relativizer_distribution_byrctype_bymatrixclause.pdf",width=18)
+ggsave("graphs/relativizer_distribution_byrctype_bymatrixclause.jpg",width=18)
+
+# PLOT BY HEAD SPECIFICITY
+# head specificity seems to matter: for non-subject RCs, more null than "that"s for empty heads; reverse for nonempty heads.
+# for subject RCs, there appears to be a greater incidence of "who"s with empty heads (maybe because there's a lot of empty animate heads like "guy"?)
+t = as.data.frame(prop.table(table(d$Relativizer,d$HeadSpecificity,d$RCType),mar=c(2,3)))
+t
+colnames(t)=c("Relativizer","HeadSpecificity","RCType","Proportion")
+f = as.data.frame(table(d$Relativizer, d$HeadSpecificity,d$RCType))
+row.names(f) = paste(f$Var1,f$Var2,f$Var3)
+t$Frequency = f[paste(t$Relativizer,t$HeadSpecificity,t$RCType),]$Freq
+head(t)
+t = na.omit(t)
+
+ggplot(t,aes(x=Relativizer,y=Proportion)) +
+  geom_bar(stat="identity") +
+  facet_grid(RCType~HeadSpecificity) +
+  geom_text(aes(label=Frequency,y=Proportion+.1))
+ggsave("graphs/relativizer_distribution_byrctype_byheadspecificity.pdf",width=7)
+ggsave("graphs/relativizer_distribution_byrctype_byheadspecificity.jpg",width=7)
+
+# PLOT BY ADJACENCY
+# there appear to be more "that"s with increasing amount of intervening material, and fewer nulls (non-sbj) / fewer "who"s (sbj)
+t = as.data.frame(prop.table(table(d$Relativizer,d$BinnedAdjacency,d$RCType),mar=c(2,3)))
+t
+colnames(t)=c("Relativizer","Adjacency","RCType","Proportion")
+f = as.data.frame(table(d$Relativizer, d$BinnedAdjacency,d$RCType))
+row.names(f) = paste(f$Var1,f$Var2,f$Var3)
+t$Frequency = f[paste(t$Relativizer,t$Adjacency,t$RCType),]$Freq
+head(t)
+t = na.omit(t)
+
+ggplot(t,aes(x=Relativizer,y=Proportion)) +
+  geom_bar(stat="identity") +
+  facet_grid(RCType~Adjacency) +
+  geom_text(aes(label=Frequency,y=Proportion+.1))
+ggsave("graphs/relativizer_distribution_byrctype_byadjacency.pdf",width=12)
+ggsave("graphs/relativizer_distribution_byrctype_byadjacency.jpg",width=12)
+
+# PLOT BY RClength
+# there appear to be more "that"s & fewer nulls with increasing RC length for sbj RCs, and the opposite for non-sbj RCs: fewer "that"s and more "who"s
+t = as.data.frame(prop.table(table(d$Relativizer,d$BinnedRClength,d$RCType),mar=c(2,3)))
+t
+colnames(t)=c("Relativizer","RClength","RCType","Proportion")
+f = as.data.frame(table(d$Relativizer, d$BinnedRClength,d$RCType))
+row.names(f) = paste(f$Var1,f$Var2,f$Var3)
+t$Frequency = f[paste(t$Relativizer,t$RClength,t$RCType),]$Freq
+head(t)
+t = na.omit(t)
+
+ggplot(t,aes(x=Relativizer,y=Proportion)) +
+  geom_bar(stat="identity") +
+  facet_grid(RCType~RClength) +
+  geom_text(aes(label=Frequency,y=Proportion+.1))
+ggsave("graphs/relativizer_distribution_byrctype_byrclength.pdf",width=16)
+ggsave("graphs/relativizer_distribution_byrctype_byrclength.jpg",width=16)
+
+
 
 
 
