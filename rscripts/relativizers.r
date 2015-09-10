@@ -70,7 +70,7 @@ ggplot(t,aes(x=Relativizer,y=Proportion)) +
   facet_wrap(~RCType) +
   geom_text(aes(label=Frequency,y=Proportion+.1))
 ggsave("graphs/relativizer_distribution_byrctype.pdf")
-ggsave("graphs/relativizer_distribution_byrctype.jpg",width=7)
+ggsave("graphs/relativizer_distribution_byrctype.jpg",width=5)
 
 # PLOT BY SEX
 # there seem to be no sex differences
@@ -87,7 +87,7 @@ ggplot(t,aes(x=Relativizer,y=Proportion)) +
   facet_grid(RCType~Sex) +
   geom_text(aes(label=Frequency,y=Proportion+.1))
 ggsave("graphs/relativizer_distribution_byrctype_bysex.pdf")
-ggsave("graphs/relativizer_distribution_byrctype_bysex.jpg",width=7)
+ggsave("graphs/relativizer_distribution_byrctype_bysex.jpg",width=5)
 
 # PLOT BY DIALECT
 # the only dialect that seems to go against the trend is New England
