@@ -258,8 +258,40 @@ ggplot(t,aes(x=Relativizer,y=Proportion)) +
 ggsave("graphs/relativizer_distribution_byrctype_byrcsubjtype.pdf",width=16)
 ggsave("graphs/relativizer_distribution_byrctype_byrcsubjtype.jpg",width=11)
 
+# NUMBER OF EACH UNIQUE SPEAKER'S UTTERANCES
+t = as.data.frame(table(d$Speaker_ID))
+head(t)
+nrow(t) # 336 unique speakers
+colnames(t) = c("Speaker","Frequency")
+ggplot(t, aes(x=Frequency)) +
+  geom_histogram()
+ggsave("graphs/histogram_of_speakerutterances.pdf")
 
+# NUMBER OF EACH UNIQUE SPEAKER'S UTTERANCES BY RCTYPE
+t = as.data.frame(table(d$Speaker_ID,d$RCType))
+head(t)
+colnames(t) = c("Speaker","RCType","Frequency")
+ggplot(t, aes(x=Frequency)) +
+  geom_histogram() +
+  facet_wrap(~RCType)
+ggsave("graphs/histogram_of_speakerutterances_byrctype.pdf")
 
-
-
+# FOR EACH SPEAKER, WHETHER HE CONTRIBUTED TO ONLY ONE OR BOTH TYPES OF RCS
+head(t)
+agr = t %>%
+  group_by(Speaker) %>%
+  summarise(NonSubj=ifelse(Frequency[1] > 0,1,0),Subj=ifelse(Frequency[2] > 0,1,0),ContributedToBothRCTypes=ifelse(Frequency[1] > 0 & Frequency[2]>0,1,0))
+agr = as.data.frame(agr)
+agr$ContributedToBothRCTypes = as.factor(as.character(agr$ContributedToBothRCTypes))
+agr$Subj = as.factor(as.character(agr$Subj))
+agr$NonSubj = as.factor(as.character(agr$NonSubj))
+table(agr$ContributedToBothRCTypes) # 268 speakers contributed both RC types
+table(agr$Subj) # 49 speakers did not contribut subject RCs
+table(agr$NonSubj) # 19 speakers did not contribute non-subject RCs
+ggplot(agr,aes(x=ContributedToBothRCTypes)) +
+  geom_histogram()
+ggplot(agr,aes(x=Subj)) +
+  geom_histogram()
+ggplot(agr,aes(x=NonSubj)) +
+  geom_histogram()
 
