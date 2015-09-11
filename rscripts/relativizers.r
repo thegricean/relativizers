@@ -24,7 +24,7 @@ nrow(d)
 # columns of interest: 
 # HeadSpecificity  Matrix.Clause.Type	Adjacency	Type.of.Antecedent	Relativizer	RClength	CorrectedRClength Speaker_ID  Speaker_sex Speaker_Age  Speaker_dialect	Speaker_education
 
-d = d[,c("HeadSpecificity","Matrix.Clause.Type","Adjacency","Type.of.Antecedent","Relativizer","RClength","CorrectedRClength","Speaker_ID","Speaker_sex","Speaker_Age","Speaker_dialect","Speaker_education","RCType","RCSubjType")]
+d = d[,c("Sentence","HeadSpecificity","Matrix.Clause.Type","Adjacency","Type.of.Antecedent","Relativizer","RClength","CorrectedRClength","Speaker_ID","Speaker_sex","Speaker_Age","Speaker_dialect","Speaker_education","RCType","RCSubjType")]
 head(d)
 summary(d)
 d$Speaker_sex=gsub("\"","",d$Speaker_sex)
@@ -49,6 +49,8 @@ d[d$Relativizer %in% c("who","which"),]$Relativizer = "wh"
 d$Relativizer = as.factor(d$Relativizer)
 d$RCSubj = as.factor(as.character(d$RCSubj))
 d$RCSubjType = as.factor(as.character(d$RCSubjType))
+d = subset(d, Speaker_education != 9) # exclude 25 cases where speaker education was unknown
+d = subset(d, Speaker_dialect != "UNK" & Speaker_dialect != "MIXED") # exclude 224 cases where speaker dialect was either unknown or mixed
 d = droplevels(d)
 summary(d)
 
