@@ -80,11 +80,12 @@ RC subject type seems to matter, even within pronominal subjects
 	- full dataset (leaving out RCSubjType, that's undefined for the sbj RCs)
 	
 - Things to ponder/try out in analysis:
-	- collapse "lonehead" into "other" category (MatrixClauseType) / wait for Tom's "presentational" (discourse-new) category to throw the existential and some of the "other"s in
+	- collapse "lonehead" into "other" category (MatrixClauseType) / wait for Tom's "presentational" (discourse-new) category to throw the existential and some of the "other"s into
 	- include dialect/region
 	- throw out level of education 9 ("unknown")
 	- try out multinomial regression --> are there enough "wh"s to even do this?
 	- interactions between socio factors?
 	- include random slopes for all fixed effects?
+	- do all analyses once with "wh" collapsed into "that", and once excluding "wh". best case: doesn't make a difference. if it does make a difference, that would be further support for trying to do the multinomial regression.
 	
 
