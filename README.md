@@ -73,5 +73,18 @@ RC subject type seems to matter, even within pronominal subjects
 ![](/graphs/relativizer_distribution_byrctype_byrcsubjtype.jpg)
 
 
+## Next steps
 
+- Run analyses:
+	- separately for sbj and non-sbj
+	- full dataset (leaving out RCSubjType, that's undefined for the sbj RCs)
+	
+- Things to ponder/try out in analysis:
+	- collapse "lonehead" into "other" category (MatrixClauseType) / wait for Tom's "presentational" (discourse-new) category to throw the existential and some of the "other"s in
+	- include dialect/region
+	- throw out level of education 9 ("unknown")
+	- try out multinomial regression --> are there enough "wh"s to even do this?
+	- interactions between socio factors?
+	- include random slopes for all fixed effects?
+	
 
