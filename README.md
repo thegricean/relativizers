@@ -66,7 +66,11 @@ There appear to be more "that"s & fewer nulls with increasing RC length for sbj 
 
 ![](/graphs/relativizer_distribution_byrctype_byrclength.jpg)
 
+### RELATIVIZER DISTRIBUTION BY RC SUBJECT TYPE
 
+RC subject type seems to matter, even within pronominal subjects
+
+![](/graphs/relativizer_distribution_byrctype_byrcsubjtype.jpg)
 
 
 

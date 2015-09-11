@@ -24,7 +24,7 @@ nrow(d)
 # columns of interest: 
 # HeadSpecificity  Matrix.Clause.Type	Adjacency	Type.of.Antecedent	Relativizer	RClength	CorrectedRClength Speaker_ID  Speaker_sex Speaker_Age  Speaker_dialect	Speaker_education
 
-d = d[,c("HeadSpecificity","Matrix.Clause.Type","Adjacency","Type.of.Antecedent","Relativizer","RClength","CorrectedRClength","Speaker_ID","Speaker_sex","Speaker_Age","Speaker_dialect","Speaker_education","RCType")]
+d = d[,c("HeadSpecificity","Matrix.Clause.Type","Adjacency","Type.of.Antecedent","Relativizer","RClength","CorrectedRClength","Speaker_ID","Speaker_sex","Speaker_Age","Speaker_dialect","Speaker_education","RCType","RCSubjType")]
 head(d)
 summary(d)
 d$Speaker_sex=gsub("\"","",d$Speaker_sex)
@@ -47,6 +47,8 @@ d$OriginalRelativizer = d$Relativizer
 d$Relativizer = as.character(d$OriginalRelativizer)
 d[d$Relativizer %in% c("who","which"),]$Relativizer = "wh"
 d$Relativizer = as.factor(d$Relativizer)
+d$RCSubj = as.factor(as.character(d$RCSubj))
+d$RCSubjType = as.factor(as.character(d$RCSubjType))
 d = droplevels(d)
 summary(d)
 
@@ -237,6 +239,25 @@ ggplot(t,aes(x=Relativizer,y=Proportion)) +
   geom_text(aes(label=Frequency,y=Proportion+.1))
 ggsave("graphs/relativizer_distribution_byrctype_byrclength.pdf",width=16)
 ggsave("graphs/relativizer_distribution_byrctype_byrclength.jpg",width=13)
+
+# PLOT BY RCSubj
+# RC subject type seems to matter, even within pronominal subjects
+t = as.data.frame(prop.table(table(d$Relativizer,d$RCType,d$RCSubjType),mar=c(2,3)))
+t
+colnames(t)=c("Relativizer","RCType","RCSubjType","Proportion")
+f = as.data.frame(table(d$Relativizer, d$RCType,d$RCSubjType))
+row.names(f) = paste(f$Var1,f$Var2,f$Var3)
+t$Frequency = f[paste(t$Relativizer,t$RCType,t$RCSubjType),]$Freq
+head(t)
+t = na.omit(t)
+
+ggplot(t,aes(x=Relativizer,y=Proportion)) +
+  geom_bar(stat="identity") +
+  facet_grid(RCType~RCSubjType) +
+  geom_text(aes(label=Frequency,y=Proportion+.1))
+ggsave("graphs/relativizer_distribution_byrctype_byrcsubjtype.pdf",width=16)
+ggsave("graphs/relativizer_distribution_byrctype_byrcsubjtype.jpg",width=11)
+
 
 
 
